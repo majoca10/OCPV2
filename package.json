@@ -1,0 +1,23 @@
+{
+  "name": "OcpV2",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
+    "core-js": "^3.15.1",
+    "nuxt": "^2.15.7",
+    "vueperslides": "^2.15.2",
+    "vuetify": "^2.5.5"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@nuxtjs/vuetify": "^1.12.1",
+    "material-design-icons-iconfont": "^6.1.0"
+  }
+}
