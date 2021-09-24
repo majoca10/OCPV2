@@ -15,23 +15,52 @@
             src="http://localhost:3000/logo.png"
           ></v-img>
         </v-card>
-      <v-list>
+      <template>
+<v-card
+    class="text-center"
+    max-width="500"
+  >
+    <v-toolbar
+      color="primary"
+      dark
+    >
+    <v-toolbar-title>MODULOS</v-toolbar-title>
+    </v-toolbar>
 
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
+    <v-list>
+      <v-list-group
+        v-for="item in items"
+        :key="item.title"
+        v-model="item.active"
+        :prepend-icon="item.action"  
+      >
+        <template v-slot:activator>
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
-          <v-list-item-content>
+          <v-list-item-content   :to="item.to" router exact>
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
+        </template>
+
+        <v-list-item
+          :to="child.to"
+          v-for="child in item.items"
+          :key="child.title"
+          route
+          exact
+        >
+          <v-list-item-action>
+            <v-icon>{{ child.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="child.title" :to="items.to" route exact></v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
-      </v-list>
+      </v-list-group>
+    </v-list>
+</v-card>
+</template>
     </v-navigation-drawer>
     <v-app-bar
       :clipped-left="clipped"
@@ -39,12 +68,6 @@
       app
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
       <v-btn
         icon
         @click.stop="clipped = !clipped"
@@ -100,20 +123,11 @@
 export default {
   data () {
     return {
+      offset: true,
       clipped: false,
       drawer: false,
       fixed: false,
       items: [
-        {
-          icon:'mdi-view-module-outline',
-          title: 'MODULOS OCPV2',
-          to: '/'
-        },
-        {
-          icon: 'mdi-view-dashboard-outline',
-          title: 'Inicio',
-          to: '/'
-        },
         {
           icon: 'mdi-cash-register',
           title: 'Facturacion',
@@ -130,9 +144,35 @@ export default {
           to:'/contable'
         },
         {
+          icon:'mdi-storefront-outline',
+          title:'Inventario',
+          to:'/inventarios'
+        },
+        {
+          icon:'mdi-file-chart-outline',
+          title:'Informes',
+          to:'/Informes'
+        },
+        {
           icon:'mdi-cog-outline',
           title:'Configuracion',
-          to:'/configuracion'
+                    items: [
+                      { 
+                        icon: 'mdi-crosshairs',
+                        title: 'Ubicacion',
+                        to:'/ubicacion' 
+                      },
+                      {
+                        icon: 'mdi-domain',
+                        title: 'Empresa',
+                        to:'/empresa'
+                      },
+                      {
+                        icon: 'mdi-cogs',
+                        title: 'Param/Cont',
+                        to:'/paramcontables'
+                      },
+                  ],
         },
       ],
       miniVariant: false,

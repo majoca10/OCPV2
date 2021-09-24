@@ -33,23 +33,23 @@ export default {
             items:[
                 {
                     title:'Pais',
-                    to:'/configuracion/pais'
+                    to:'/ubicacion/pais'
                 },
                 {
                     title:'Departamento',
-                    to:'/configuracion/departamento'
+                    to:'/ubicacion/departamento'
                 },
                 {
                     title:'Ciudad',
-                    to:'/configuracion/ciudad'
+                    to:'/ubicacion/ciudad'
                 },
                 {
                     title:'Zonas',
-                    to:'/configuracion/zonas'
+                    to:'/ubicacion/zonas'
                 },
                 {
                     title:'Barrios',
-                    to:'/configuracion/barrios'
+                    to:'/ubicacion/barrios'
                 },
             ]
 

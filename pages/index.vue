@@ -1,3 +1,3 @@
 <template>
-
+<MenuUbicacion />
 </template>

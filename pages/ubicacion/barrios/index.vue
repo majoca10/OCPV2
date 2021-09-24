@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MenuConfiguracion />
+   <MenUbicacion />
     <Nuxt />
   </div>
 </template>
