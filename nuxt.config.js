@@ -43,7 +43,11 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+
+  baseURL: 'http://localhost:9000', // Used as fallback if no runtime config is provided
+
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -66,5 +70,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  
+  server:{
+    host:'0.0.0.0',
+    post:'3000'
   }
 }

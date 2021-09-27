@@ -52,11 +52,12 @@
             <v-btn
               class="mr-4"
               @click="submit"
+              color="success"
             >
-              submit
+              Agregar
             </v-btn>
             <v-btn @click="clear">
-              clear
+              Limpiar
             </v-btn>
         </form>
       </v-card>
@@ -86,6 +87,8 @@
                       <th class="text-left">
                         Codigo
                       </th>
+                      <th></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -96,6 +99,14 @@
                       <td>{{ item.id }}</td>
                       <td>{{ item.pais }}</td>
                       <td>{{ item.codigo }}</td>
+                      <td><v-btn tile color="success">
+                      <v-icon left>mdi-pencil</v-icon>
+                      Edit
+                      </v-btn></td>
+                      <td><v-btn tile color="error">
+                      <v-icon left>mdi-minus</v-icon>
+                      Edit
+                      </v-btn></td>
                     </tr>
                   </tbody>
                 </template>

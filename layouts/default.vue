@@ -9,10 +9,10 @@
     >
             <v-card class="logo py-4 d-flex justify-center">
           <v-img
-            lazy-src="http://localhost:3000/logo.png"
+            lazy-src="http://127.0.0.1:3000/logo.png"
             max-height="70"
             max-width="50"
-            src="http://localhost:3000/logo.png"
+            src="http://127.0.0.1:3000/logo.png"
           ></v-img>
         </v-card>
       <template>
