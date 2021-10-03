@@ -14,14 +14,18 @@
         <v-card-title>Paises</v-card-title>
         <v-card-text>Test de informacion de datos de paises</v-card-text>
         <form style="padding: 10px;">
+              <v-text-field
+              v-model="id"
+              v-if="id"
+            ></v-text-field>
             <v-text-field
-              v-model="name"
-              :error-messages="nameErrors"
+              v-model="pais"
+              :error-messages="paisErrors"
               :counter="4"
               label="Pais"
               required
-              @input="$v.name.$touch()"
-              @blur="$v.name.$touch()"
+              @input="$v.pais.$touch()"
+              @blur="$v.pais.$touch()"
             ></v-text-field>
             <v-text-field
               v-model="codigo"
@@ -88,27 +92,31 @@
                       <th class="text-left">
                         Codigo
                       </th>
-                      <th>Codigo2</th>
-                      <th>Codigo FE</th>
+                      <th class="text-left">
+                        Codigo2
+                      </th>
+                      <th class="text-left">
+                        Codigo FE
+                      </th>
                       <th></th>
                       <th></th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr
-                      v-for="item in paises"
-                      :key="item.pais"
+                      v-for="pais of paises"
+                      :key="pais"
                     >
-                      <td>{{ item.id }}</td>
-                      <td>{{ item.pais }}</td>
-                      <td>{{ item.codigo }}</td>
-                      <td>{{ item.codigo2 }}</td>
-                      <td>{{ item.codigofe }}</td>
-                      <td><v-btn tile color="success" @click="edit(item.id,item.pais,item.codigo,item.codigo2,item.codigofe)">
+                      <td>{{ pais.id }}</td>
+                      <td>{{ pais.nombre }}</td>
+                      <td>{{ pais.codigo }}</td>
+                      <td>{{ pais.codigo2 }}</td>
+                      <td>{{ pais.cod_factelectronica }}</td>
+                      <td><v-btn tile color="success" @click="edit(pais.id,pais.pais,pais.codigo,pais.codigo2,pais.codigofe)">
                       <v-icon left>mdi-pencil</v-icon>
                       Edit
                       </v-btn></td>
-                      <td><v-btn tile color="error" @click="eliminar(item.id)">
+                      <td><v-btn tile color="error" @click="eliminar(pais.id)">
                       <v-icon left>mdi-minus</v-icon>
                       Edit
                       </v-btn></td>
@@ -127,12 +135,13 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, email } from 'vuelidate/lib/validators'
-  
+  import axios from 'axios'
+
   export default {
     mixins: [validationMixin],
 
     validations: {
-      name: { required, maxLength: maxLength(4) },
+      pais: { required, maxLength: maxLength(4) },
       codigo: { required },
       codigo2: { required },
       codigofe: { required },
@@ -141,75 +150,28 @@
     data (){
       return{
         search:'',
-        paises:[
-          {
-            id: '',  
-            pais: '',
-            codigo: '',
-            codigo2:'',
-            codigofe:''
-          },
-        ]
+        paises:[]
+      }
+    },
+    
+    async created(){
+     try {
+          const res = await axios.get('http://127.0.0.1:9000/api/paises')
+          this.paises = res.data;
+          console.log(paises)
+      } catch (error){
+        console.log(error)
       }
     },
 
-    created(){
-
-      this.mostrar()
-
-    },
-  methods:{
-
-      mostrar(){
-        axios.get(baseURL).then(response=>{
-          this.paises=response.data;
-        })
-      },
-
-      crear(){
-        let parametros = {pais:this.paises.name, codigo:this.paises.codigo, codigo:this.paises.codigo2, codigo:this.paises.codigofe }
-        axios.post(baseURL, parametros).then(response=>{
-          this.mostrar()
-        })
-        this.paises.name='';
-        this.paises.codigo='';
-        this.paises.codigo2='';
-        this.paises.codigofe='';
-
-      },
-
-      editar(){
-        let parametros = {id:this.paises.id, pais:this.paises.name, codigo:this.paises.codigo, codigo:this.paises.codigo2, codigo:this.paises.codigofe }
-        axios.put(baseURL+this.paises.id, parametros).then(response=>{
-          this.mostrar()
-        })  
-
-      },
-
-      eliminar(){
-        Swal.fire({
-          title:'Confirma la eliminacion del registro',
-          confirmButtonText:'Confirmar',
-          showCancelButton:true,
-        }).then((result)=>{
-          if(result.isConfirmed){
-            axios.delete(baseURL+id).the(response=>{
-              this.mostrar()
-            });
-            Swal.fire('Eliminado','','success')
-          }else if(result.isDenied){}
-        });
-      },
-
-    },
     
     computed: {
 
-      nameErrors () {
+      paisErrors () {
         const errors = []
-        if (!this.$v.name.$dirty) return errors
-        !this.$v.name.maxLength && errors.push('Pais Requiere almenos 4 Caracteres')
-        !this.$v.name.required && errors.push('Pais es Requerido')
+        if (!this.$v.pais.$dirty) return errors
+        !this.$v.pais.maxLength && errors.push('Pais Requiere almenos 4 Caracteres')
+        !this.$v.pais.required && errors.push('Pais es Requerido')
         return errors
       },
       codigoErrors () {
@@ -234,15 +196,69 @@
         return errors
       },
 
+      id:{
+        get(){
+          return this.$store.state.ubicacion.id
+        },
+        set(value){
+          this.$store.commit("ubicacion/storeId", value)
+        }
+      },
+      pais:{
+        get(){
+          return this.$store.state.ubicacion.pais
+        },
+        set(value){
+          this.$store.commit("ubicacion/storePais", value)
+        }
+      },
+      codigo:{
+        get(){
+          return this.$store.state.ubicacion.codigo
+        },
+        set(value){
+          this.$store.commit("ubicacion/storeCodigo", value)
+        }
+      },
+      codigo2:{
+        get(){
+          return this.$store.state.ubicacion.codigo2
+        },
+        set(value){
+          this.$store.commit("ubicacion/storeCodigo2", value)
+        }
+      },
+      codigofe:{
+        get(){
+          return this.$store.state.ubicacion.codigofe
+        },
+        set(value){
+          this.$store.commit("ubicacion/storeCodigofe", value)
+        }
+      },
+
     },
 
     methods: {
-      agregar () {
-        this.$v.$touch()
+     async agregarPais (pais) {
+       if(user.id){
+        await this.$axios.put(baseURL + "/paises" + user.id, pais);
+       } else{
+        await this.$axios.post(baseURL + "/paises", pais);
+       }
+        await this.resetForm({id:'0', pais:'', codigo:'', codigo2:'', codigofe:'',});
+        await this.$store.commit("ubicacion/storedata", (await this.$axios.get(baseURL)))
+      },
+      resetForm(pais){
+        this.$store.commit("ubicacion/storeId", pais.id);
+        this.$store.commit("ubicacion/storePais", pais.pais);
+        this.$store.commit("ubicacion/storeCodigo", pais.codigo);
+        this.$store.commit("ubicacion/storeCodigo2", pais.codigo2);
+        this.$store.commit("ubicacion/storeCodigofe", pais.codigofe);
       },
       limpiar () {
         this.$v.$reset()
-        this.name = ''
+        this.pais = ''
         this.codigo = ''
         this.codigo2 = ''
         this.codigofe = ''
