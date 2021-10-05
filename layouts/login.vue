@@ -7,23 +7,49 @@
       <v-card-text>
         <v-form>
           <v-text-field 
-            label="Username" 
+            label="Usuario" 
             prepend-icon="mdi-account-circle"
+            v-model="login.usuario"
           />
           <v-text-field 
-            :type="showPassword ? 'text' : 'password'" 
             label="Password"
             prepend-icon="mdi-lock"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            @click:append="showPassword = !showPassword"
+            v-model="login.password"
           />
         </v-form>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
-        <v-btn color="success">Register</v-btn>
-        <v-btn color="info">Login</v-btn>
+        <v-btn color="info" @click="login()">Ingresar</v-btn>
       </v-card-actions>
     </v-card>
   </v-app>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      usuario: '',
+      password: '',
+      error: null
+    }
+  },
+
+  methods: {
+    async login() {
+      try {
+        await this.$auth.post('local', {
+          data: {
+          usuario: this.usuario,
+          password: this.password
+          }
+        })
+            console.log(data)
+        this.$router.push('/board')
+      } catch (e) {
+        this.error = e.response.data.message
+      }
+    }
+  }
+}
+</script>
