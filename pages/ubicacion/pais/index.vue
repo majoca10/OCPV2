@@ -1,25 +1,22 @@
 <template>
   <div>
     <MenUbicacion />
-    <Nuxt />
-  <div>
-<v-container fluid pa-0>
   <v-row 
     align="center" 
     justify="center" 
     style="height:100vh" dense
   >
-    <v-colm style="height: 100%; width: 30%; margin-top: 25px; padding-right: 15px;">
+    <div style="height: 100%; width: 30%; margin-top: 25px; padding-right: 15px;">
       <v-card elevation="3" aling="center">
         <v-card-title>Paises</v-card-title>
         <v-card-text>Test de informacion de datos de paises</v-card-text>
         <form style="padding: 10px;">
               <v-text-field
-              v-model="id"
+              v-model="formPais.id"
               v-if="id"
             ></v-text-field>
             <v-text-field
-              v-model="pais"
+              v-model="formPais.nombre"
               :error-messages="paisErrors"
               :counter="4"
               label="Pais"
@@ -28,7 +25,7 @@
               @blur="$v.pais.$touch()"
             ></v-text-field>
             <v-text-field
-              v-model="codigo"
+              v-model="formPais.codigo"
               :error-messages="codigoErrors"
               label="Codigo"
               required
@@ -37,7 +34,7 @@
               type="number"
             ></v-text-field>
               <v-text-field
-              v-model="codigo2"
+              v-model="formPais.codigo2"
               :error-messages="codigo2Errors"
               label="Codigo2"
               required
@@ -46,17 +43,17 @@
               type="number"
             ></v-text-field>
             <v-text-field
-              v-model="codigofe"
+              v-model="formPais.cod_factelectronica"
               :error-messages="codigofeErrors"
               label="Codigo Factura Electronica"
               required
-              @input="$v.codigofe.$touch()"
-              @blur="$v.codigofe.$touch()"
+              @input="$v.cod_factelectronica.$touch()"
+              @blur="$v.cod_factelectronica.$touch()"
               type="number"
             ></v-text-field>
             <v-btn
               class="mr-4"
-              @click="agregar()"
+              @click="submit()"
               color="success"
             >
               Agregar
@@ -66,8 +63,8 @@
             </v-btn>
         </form>
       </v-card>
-      </v-colm>
-        <v-colm style="height: 100%; width: 60%; margin-top: 25px;">
+      </div>
+        <div style="height: 100%; width: 60%; margin-top: 25px;">
         <v-card elevation="3">
         <v-card-title>Paises</v-card-title>
         <v-card-text>Test de informacion de datos de paises</v-card-text>
@@ -112,30 +109,27 @@
                       <td>{{ pais.codigo }}</td>
                       <td>{{ pais.codigo2 }}</td>
                       <td>{{ pais.cod_factelectronica }}</td>
-                      <td><v-btn tile color="success" @click="edit(pais.id,pais.pais,pais.codigo,pais.codigo2,pais.codigofe)">
+                      <td><v-btn tile color="success" @click="submit(pais.id,pais.nombre,pais.codigo,pais.codigo2,pais.cod_factelectronica)">
                       <v-icon left>mdi-pencil</v-icon>
                       Edit
                       </v-btn></td>
                       <td><v-btn tile color="error" @click="eliminar(pais.id)">
                       <v-icon left>mdi-minus</v-icon>
-                      Edit
+                      Eliminar
                       </v-btn></td>
                     </tr>
                   </tbody>
                 </template>
               </v-simple-table>
                      </v-card>
-          </v-colm>
+          </div>
         </v-row>
-</v-container>        
     </div>
-  </div>
   
 </template>
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, email } from 'vuelidate/lib/validators'
-  import axios from 'axios'
 
   export default {
     mixins: [validationMixin],
@@ -144,21 +138,28 @@
       pais: { required, maxLength: maxLength(4) },
       codigo: { required },
       codigo2: { required },
-      codigofe: { required },
+      cod_factelectronica: { required },
     },
   
     data (){
       return{
         search:'',
-        paises:[]
+        paises:[],
+        formPais:{
+        id:'',
+        nombre:'',
+        codigo:'',
+        codigo2:'',
+        cod_factelectronica:''
+        }
       }
     },
     
-    async created(){
+    async mounted(){
      try {
-          const res = await axios.get('http://127.0.0.1:9000/api/paises')
+          const res = await this.$axios.get('/paises')
           this.paises = res.data;
-          console.log(paises)
+          console.log(res)
       } catch (error){
         console.log(error)
       }
@@ -190,80 +191,21 @@
       },
       codigofeErrors () {
         const errors = []
-        if (!this.$v.codigofe.$dirty) return errors
-        !this.$v.codigofe.maxLength && errors.push('CodigoFE Requiere almenos 1 Caracteres')
-        !this.$v.codigofe.required && errors.push('CodigoFE es Requerido')
+        if (!this.$v.cod_factelectronica.$dirty) return errors
+        !this.$v.cod_factelectronica.maxLength && errors.push('CodigoFE Requiere almenos 1 Caracteres')
+        !this.$v.cod_factelectronica.required && errors.push('CodigoFE es Requerido')
         return errors
       },
-
-      id:{
-        get(){
-          return this.$store.state.ubicacion.id
-        },
-        set(value){
-          this.$store.commit("ubicacion/storeId", value)
-        }
-      },
-      pais:{
-        get(){
-          return this.$store.state.ubicacion.pais
-        },
-        set(value){
-          this.$store.commit("ubicacion/storePais", value)
-        }
-      },
-      codigo:{
-        get(){
-          return this.$store.state.ubicacion.codigo
-        },
-        set(value){
-          this.$store.commit("ubicacion/storeCodigo", value)
-        }
-      },
-      codigo2:{
-        get(){
-          return this.$store.state.ubicacion.codigo2
-        },
-        set(value){
-          this.$store.commit("ubicacion/storeCodigo2", value)
-        }
-      },
-      codigofe:{
-        get(){
-          return this.$store.state.ubicacion.codigofe
-        },
-        set(value){
-          this.$store.commit("ubicacion/storeCodigofe", value)
-        }
-      },
-
     },
 
     methods: {
-     async agregarPais (pais) {
-       if(user.id){
-        await this.$axios.put(baseURL + "/paises" + user.id, pais);
-       } else{
-        await this.$axios.post(baseURL + "/paises", pais);
-       }
-        await this.resetForm({id:'0', pais:'', codigo:'', codigo2:'', codigofe:'',});
-        await this.$store.commit("ubicacion/storedata", (await this.$axios.get(baseURL)))
-      },
-      resetForm(pais){
-        this.$store.commit("ubicacion/storeId", pais.id);
-        this.$store.commit("ubicacion/storePais", pais.pais);
-        this.$store.commit("ubicacion/storeCodigo", pais.codigo);
-        this.$store.commit("ubicacion/storeCodigo2", pais.codigo2);
-        this.$store.commit("ubicacion/storeCodigofe", pais.codigofe);
-      },
-      limpiar () {
-        this.$v.$reset()
-        this.pais = ''
-        this.codigo = ''
-        this.codigo2 = ''
-        this.codigofe = ''
-      },
+      submit(){
+        this.$axios.post('/paises/', this.form).then(function( response ){
+        console.log(this.form)// Handle success
+         }.bind(this));
+        }
     },
+    
 
   }  
 </script>

@@ -45,7 +45,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
 
-  baseURL: 'http://localhost:9000/api/', // Used as fallback if no runtime config is provided
+  baseURL: 'http://localhost:9000/api', // Used as fallback if no runtime config is provided
 
   },
 
