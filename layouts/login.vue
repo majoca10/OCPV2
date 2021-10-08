@@ -7,7 +7,7 @@
           type="text"
           class="form-control"
           id="email"
-          v-model="loginData.usuario"
+          v-model="loginData.username"
         />
       </div>
       <div class="mb-3">
@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       loginData: {
-        usuario: "",
+        username: "",
         password: ""
       }
     };
@@ -39,7 +39,7 @@ export default {
         let response = await this.$auth.loginWith("local", {
           data: this.loginData
         });
-        this.$router.push("/");
+        this.$router.push("/board");
         console.log(response);
       } catch (err) {
         console.log(err);
