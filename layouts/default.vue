@@ -1,5 +1,7 @@
 <template>
-  <v-app dark>
+<div>
+  <div v-if="$auth.loggedIn">
+      <v-app dark>
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -7,19 +9,19 @@
       fixed
       app
     >
-            <v-card class="logo py-4 d-flex justify-center">
+      <v-card class="logo py-4 d-flex justify-center">
           <v-img
             lazy-src="http://127.0.0.1:3000/logo.png"
             max-height="70"
             max-width="50"
             src="http://127.0.0.1:3000/logo.png"
           ></v-img>
-        </v-card>
-      <template>
-<v-card
+      </v-card>
+  <template>
+    <v-card
     class="text-center"
     max-width="500"
-  >
+    >
     <v-toolbar
       color="primary"
       dark
@@ -34,14 +36,14 @@
         v-model="item.active"
         :prepend-icon="item.action"  
       >
-        <template v-slot:activator>
+ <template v-slot:activator>
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content   :to="item.to" router exact>
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
-        </template>
+  </template>
 
         <v-list-item
           :to="child.to"
@@ -59,8 +61,8 @@
         </v-list-item>
       </v-list-group>
     </v-list>
-</v-card>
-</template>
+    </v-card>
+  </template>
     </v-navigation-drawer>
     <v-app-bar
       :clipped-left="clipped"
@@ -117,6 +119,11 @@
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
+  </div>
+  <div v-else>
+    <LoginUser />
+  </div>
+  </div>
 </template>
 
 <script>
